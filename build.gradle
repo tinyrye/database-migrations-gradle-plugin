@@ -14,8 +14,10 @@ dependencies {
     compile localGroovy()
 }
 
-task wrapper(type: Wrapper) {
-  gradleVersion = "2.6"
+install {
+    repositories.mavenInstaller {
+        pom.artifactId = 'io-operations'
+    }
 }
 
 dependencies {
