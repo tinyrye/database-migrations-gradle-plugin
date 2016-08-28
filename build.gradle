@@ -14,10 +14,6 @@ dependencies {
     compile localGroovy()
 }
 
-task nuttin {
-	println "hello world"
-}
-
 install {
     repositories.mavenInstaller {
         pom.artifactId = 'io-operations'
