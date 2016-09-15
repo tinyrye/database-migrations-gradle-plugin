@@ -18,7 +18,7 @@ public class DatabaseMigrationPlugin implements Plugin<Project>
 
         /**
          * Create migration versioning repository.
-         */        
+         */
         project.task('database-migrations-init') << {
             new Sql(getDataSourceHandle(project.migrations.getSuperConfig())).execute(
                 "CREATE DATABASE ${project.migrations.database} WITH owner = ${project.migrations.username}".toString())
@@ -41,6 +41,13 @@ public class DatabaseMigrationPlugin implements Plugin<Project>
         project.task('database-migrations-migrate') << {
             def dbAccessor = new Sql(getDataSourceHandle(project.migrations))
             println "---- Running Migrations ---------------------------------------------------------------"
+            new Sql(getDataSourceHandle(project.migrations)).execute("""
+                CREATE TABLE IF NOT EXISTS database_migrations_versioning (
+                    version VARCHAR(128) PRIMARY KEY,
+                    file_name VARCHAR(128),
+                    migrated BOOLEAN,
+                    ran_on TIMESTAMP
+                )""")
             new File(project.migrations.baseDir).eachFile { file ->
                 migrate(dbAccessor, file)
             }
